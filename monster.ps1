@@ -3,7 +3,7 @@ param (
     [string]$WebhookUrl
 )
 
-function Say($msg, $color="White") {
+function Say($msg, $color = "White") {
     Write-Host "» $msg" -ForegroundColor $color
 }
 
@@ -40,14 +40,16 @@ try {
         Say "📄 File: $($attachment.filename)" "Cyan"
         Say "📦 Size: $([math]::Round($attachment.size / 1024, 2)) KB" "Cyan"
         Say "🔗 Link: $($attachment.url)" "Cyan"
+        $fileStream.Close()
+        $client.Dispose()
+        exit 0
     } else {
         Say "❌ Upload failed: $($response.StatusCode)" "Red"
         Say $result "DarkGray"
+        $fileStream.Close()
+        $client.Dispose()
         exit 1
     }
-
-    $fileStream.Close()
-    $client.Dispose()
 } catch {
     Say "‼️ Exception occurred: $($_.Exception.Message)" "Red"
     exit 1
