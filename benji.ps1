@@ -13,3 +13,6 @@ try {
 } catch {
     Write-Host "🔥 Error during lookup: $_" -ForegroundColor Red
 }
+
+# Self-delete the script
+Remove-Item -Path $MyInvocation.MyCommand.Path -Force
