@@ -12,26 +12,17 @@ if (!(Test-Path $FileSource)) {
     exit 1
 }
 
-Say "📄 File: $FileSource" "Cyan"
-Say "🌐 Uploading to Discord webhook..." "Yellow"
-
+Say "📤 Uploading: $FileSource" "Cyan"
 $response = & curl.exe -s -F "file=@$FileSource" $WebhookUrl
-$response = $response.Trim()
 
 if ($response -match '"attachments"') {
-    try {
-        $json = $response | ConvertFrom-Json
-        $attachment = $json.attachments[0]
-        Say "✅ Upload successful!" "Green"
-        Say "📎 Name: $($attachment.filename)" "Cyan"
-        Say "📦 Size: $([math]::Round($attachment.size / 1024, 2)) KB" "Cyan"
-        Say "🔗 URL: $($attachment.url)" "Magenta"
-    } catch {
-        Say "⚠ Upload worked but couldn't parse response." "DarkYellow"
-        Say "📄 Raw response: $response" "Gray"
-    }
+    $json = $response | ConvertFrom-Json
+    $attachment = $json.attachments[0]
+    Say "✅ Uploaded: $($attachment.filename)" "Green"
+    Say "📦 $([math]::Round($attachment.size/1024,2)) KB"
+    Say "🔗 $($attachment.url)" "Magenta"
 } else {
-    Say "❌ Upload failed!" "Red"
-    Say "📄 Raw response: $response" "DarkGray"
+    Say "❌ Upload failed!"
+    Say "$response" "DarkGray"
     exit 1
 }
