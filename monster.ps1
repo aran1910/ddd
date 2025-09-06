@@ -19,12 +19,13 @@ Copy-Item $FileSource $tempFile -Force
 Say "Uploading '$fileName' to Discord..." "Yellow"
 
 try {
-    Add-Type -AssemblyName "System.Net.Http"
+    Add-Type -AssemblyName System.Net.Http
 
-    $client = New-Object System.Net.Http.HttpClient
-    $content = New-Object System.Net.Http.MultipartFormDataContent
+    $client = [System.Net.Http.HttpClient]::new()
+    $content = [System.Net.Http.MultipartFormDataContent]::new()
+
     $fileStream = [System.IO.File]::OpenRead($tempFile)
-    $fileContent = New-Object System.Net.Http.StreamContent($fileStream)
+    $fileContent = [System.Net.Http.StreamContent]::new($fileStream)
     $fileContent.Headers.ContentType = [System.Net.Http.Headers.MediaTypeHeaderValue]::Parse("application/octet-stream")
     $content.Add($fileContent, "file", $fileName)
 
@@ -45,9 +46,9 @@ try {
         exit 1
     }
 
-    $fileStream.Dispose()
+    $fileStream.Close()
     $client.Dispose()
 } catch {
-    Say "‼️ Exception occurred: $_" "Red"
+    Say "‼️ Exception occurred: $($_.Exception.Message)" "Red"
     exit 1
 }
