@@ -33,23 +33,29 @@ try {
     $result = $response.Content.ReadAsStringAsync().Result
 
     if ($response.IsSuccessStatusCode) {
-        $json = $result | ConvertFrom-Json
-        $attachment = $json.attachments[0]
+        try {
+            $json = $result | ConvertFrom-Json
+            $attachment = $json.attachments[0]
 
-        Say "✅ Upload Successful" "Green"
-        Say "📄 File: $($attachment.filename)" "Cyan"
-        Say "📦 Size: $([math]::Round($attachment.size / 1024, 2)) KB" "Cyan"
-        Say "🔗 Link: $($attachment.url)" "Cyan"
-        $fileStream.Close()
-        $client.Dispose()
+            Say "✅ Upload Successful" "Green"
+            Say "📄 File: $($attachment.filename)" "Cyan"
+            Say "📦 Size: $([math]::Round($attachment.size / 1024, 2)) KB" "Cyan"
+            Say "🔗 Link: $($attachment.url)" "Cyan"
+        } catch {
+            Say "⚠️ Upload worked, but failed to parse Discord JSON." "Yellow"
+            Say "Raw response:" "DarkGray"
+            Say $result "Gray"
+        }
+
+        try { $fileStream.Close(); $client.Dispose() } catch {}
         exit 0
     } else {
         Say "❌ Upload failed: $($response.StatusCode)" "Red"
         Say $result "DarkGray"
-        $fileStream.Close()
-        $client.Dispose()
+        try { $fileStream.Close(); $client.Dispose() } catch {}
         exit 1
     }
+
 } catch {
     Say "‼️ Exception occurred: $($_.Exception.Message)" "Red"
     exit 1
