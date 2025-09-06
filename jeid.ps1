@@ -1,28 +1,10 @@
-param (
-    [string]$FileSource,
-    [string]$WebhookUrl
-)
+Write-Host "✅ jeid.ps1 STARTED"
 
-function Say($msg, $color = "White") {
-    Write-Host ">> $msg" -ForegroundColor $color
-}
-
-if (!(Test-Path $FileSource)) {
-    Say "❌ File not found: $FileSource" "Red"
+if ($args.Count -lt 2) {
+    Write-Host "❌ Not enough arguments. Args received: $($args.Count)"
     exit 1
 }
 
-Say "📤 Uploading: $FileSource" "Cyan"
-$response = & curl.exe -s -F "file=@$FileSource" $WebhookUrl
-
-if ($response -match '"attachments"') {
-    $json = $response | ConvertFrom-Json
-    $attachment = $json.attachments[0]
-    Say "✅ Uploaded: $($attachment.filename)" "Green"
-    Say "📦 $([math]::Round($attachment.size/1024,2)) KB"
-    Say "🔗 $($attachment.url)" "Magenta"
-} else {
-    Say "❌ Upload failed!"
-    Say "$response" "DarkGray"
-    exit 1
-}
+Write-Host "✅ Arguments passed:"
+Write-Host " - $($args[0])"
+Write-Host " - $($args[1])"
