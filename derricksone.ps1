@@ -1,14 +1,13 @@
-try {
-    Add-Type -AssemblyName System.Runtime.WindowsRuntime
-    $geoType = [Windows.Devices.Geolocation.Geolocator, Windows.Devices.Geolocation, ContentType=WindowsRuntime]
-    $geolocator = New-Object $geoType
-    $position = $geolocator.GetGeopositionAsync().GetAwaiter().GetResult()
-    $lat = $position.Coordinate.Point.Position.Latitude
-    $lon = $position.Coordinate.Point.Position.Longitude
+Add-Type -AssemblyName System.Device #Required to access System.Device.Location namespace
+$GeoWatcher = New-Object System.Device.Location.GeoCoordinateWatcher #Create the required object
+$GeoWatcher.Start() #Begin resolving current locaton
 
-    Write-Host "`n🛰 Latitude: $lat"
-    Write-Host "🛰 Longitude: $lon`n"
-}
-catch {
-    Write-Host "❌ Failed to retrieve exact coordinates: $($_.Exception.Message)"
+while (($GeoWatcher.Status -ne 'Ready') -and ($GeoWatcher.Permission -ne 'Denied')) {
+    Start-Sleep -Milliseconds 100 #Wait for discovery.
+}  
+
+if ($GeoWatcher.Permission -eq 'Denied'){
+    Write-Error 'Access Denied for Location Information'
+} else {
+    $GeoWatcher.Position.Location | Select Latitude,Longitude #Select the relevent results.
 }
