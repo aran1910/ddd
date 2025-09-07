@@ -8,9 +8,9 @@ $webhook = "https://discord.com/api/webhooks/1407832644372267170/e2K57M_-OIhHA4u
 
 Write-Host "✅ Sent message"
 
-# Show the message box (this blocks until you click)
+# Blocking message box
 $result  = [System.Windows.Forms.MessageBox]::Show($message,$title,$buttons,$icon)
 
-# Send the clicked result to Discord
+# Send clicked result to Discord
 $payload = @{ content = "You clicked: $result" } | ConvertTo-Json -Compress
 curl.exe -H "Content-Type: application/json" -X POST -d $payload $webhook
