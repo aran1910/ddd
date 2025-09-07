@@ -8,5 +8,7 @@ $webhook = "https://discord.com/api/webhooks/1407832644372267170/e2K57M_-OIhHA4u
 
 $result  = [System.Windows.Forms.MessageBox]::Show($message,$title,$buttons,$icon)
 
-$payload = @{ content = "You clicked: $result" } | ConvertTo-Json -Compress
-curl.exe -H "Content-Type: application/json" -X POST -d $payload $webhook
+# Build JSON properly (no invalid 50109 errors)
+$json = @{ content = "You clicked: $result" } | ConvertTo-Json -Compress -Depth 3
+[System.IO.File]::WriteAllText("C:\Temp\payload.json",$json)   # <— debug line
+curl.exe -H "Content-Type: application/json" -X POST -d "@C:\Temp\payload.json" $webhook
